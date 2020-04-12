@@ -1,0 +1,14 @@
+dnl 
+dnl
+
+m4_version_prereq([2.68])
+
+
+AT_INIT([libarithmos testsuite])
+
+# The number checks
+m4_include([numbers.at])
+
+# The conversion tests
+m4_include([convert.at])
+

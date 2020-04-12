@@ -1,0 +1,469 @@
+.\"
+.\"  This document is a part of the libarithmos package
+.\"  libarithmos.3: man page for the 'libarithmos' library
+.\"
+.\"  Copyright (c) 2020, Karta Kooner, GNU GPL v3+
+.\"
+.TH LIBARITHMOS 3 2020\-04\-11 GNU/Linux "Linux Programmer's Manual"
+.SH NAME
+libarithmos \- the libarithmos library.
+.SH SYNOPSIS
+.RB "#include <" arithmos.h >
+
+/**** Number operations ****/
+.PP
+// containers:
+.br
+.RB "using " Arithmos::Data ;
+.br
+.PP
+.RB "// pre-defined " Arithmos::Format " objects:"
+.br
+.RB "using " Arithmos::binary ;
+.br
+.RB "using " Arithmos::octal ;
+.br
+.RB "using " Arithmos::decimal ;
+.br
+.RB "using " Arithmos::hexadecimal ;
+.PP
+.RB "// pre-defined " Arithmos::Translation " objects:"
+.br
+.RB "using " Arithmos::hex_lower_to_upper ;
+.br
+.RB "using " Arithmos::hex_upper_to_lower ;
+.PP
+// functions:
+.br
+.RB "using " Arithmos::translate ;
+.PP
+.PD 0
+// number operations "compare" and "to":
+.PP
+std::string str, str1, str2;
+.PP
+\fBData\fR d = \fBdecimal\fR.compare( str );
+.PP
+str2 = \fBdecimal\fR.to( \fBbinary\fR, str1 );
+.PD
+.PP
+// to tanslate string "0x1b6AEdd713E0" -> "0x1B6AEDD713E0":
+.br
+str2 = \fBtranslate(\fR str1, \fBhex_lower_to_upper )\fR;
+.PD
+
+
+/**** Creating a custom format ****/
+.PP
+// containers:
+.br
+.RB "using " Arithmos::Format ;
+.PP
+// define a vector of digits, from 0 to N.
+.br
+.RB "// (" Format::digit_type " is a typedef for char)"
+.PP
+const std::vector<\fBFormat::digit_type\fR> digits{ '0', '1', ..., 'N' };
+.PP
+// define your number format:
+.br
+//   <specifier><digits...>[<exponent><digits>]
+.br
+// for example, for hexadecimal specifier="0x" and exponent="p".
+.PP
+const \fBFormat\fR number{ "\fIspecifier\fR", \fIdigits\fR, 
+"\fIexponent\fR", \fIdigits\fR };
+.PD
+
+
+/**** Creating a translation ****/
+.PP
+// containers:
+.br
+.RB "using " Arithmos::Congruence ;
+.br
+.RB "using " Arithmos::Translation ;
+.PP
+// create a translation for the "translate" function as follows.
+.br
+// this will, for example, change any char in the set {'x', 'X', ...}
+.br
+// to 'X', when used as the translation in any call to "translate"
+.br
+// (see above).
+.PP
+const \fBTranslation\fR digit_to_digit{
+    \fBCongruence\fR{ {'x', 'X', ... 
+}, 'X' },
+    \fBCongruence\fR{ {'y', 'Y', ... 
+}, 'Y' },
+    ...
+.br
+};
+
+
+.SH DESCRIPTION
+The libarithmos library can be used to parse a string as a number, and
+convert strings in one number format into strings of another format.
+
+.SH LIBRARY DEFINITIONS
+.SS Types
+\fBcount_type\fR  [unsigned long long]
+.RS 4
+Typedef used as a default for all other classes. This type is used
+to contain the max number of appearances that a digit can appear in a
+number (see \fBDigit\fR class).
+.RE
+
+\fBwidth_type\fR  [long long]
+.RS 4
+Typedef used as a default for all other classes. This type is used
+by certain data members in the \fBData\fR class (see \fBData\fR class).
+.RE
+
+.SS Classes
+\fBBasic_Digit\fR<char_type, count_type> ( ... )
+.br
+\fBDigit\fR( const char_type  symbol, const count_type  max_num )
+.br
+\fBDigit\fR( const char_type  symbol )
+.PP
+.RS 4
+Declares a digit \fIsymbol\fR of type \fIchar_type\fR, which must appear
+less than \fImax_num\fR number of times.
+
+.B Methods
+.RS 4
+char_type\fB name\fR() const
+.RS 4
+Return the digit in the class instance.
+.RE
+
+count_type\fB count_max\fR() const
+.RS 4
+Return the count max for the class instance. If a max is not set, then
+will return the maximum size of the number type \fBcount_type\fR.
+.RE
+.RE
+.RE
+
+
+\fBBasic_Format\fR<char_type, count_type> ( ... )
+.br
+\fBFormat\fR( const std::string&   specifier,
+        std::vector<\fBDigit\fR>&  digits,
+        const std::string&   exponent_string,
+        std::vector<\fBDigit\fR>&  exponent_digits )
+.PP
+.RS 4
+\fRDeclares a number format:
+.RS 4
+<specifier><digits>[<exponent_string>\
+<exponent_digits>]
+.RE
+where:
+.RS 4
+- \fIspecifier\fR is a string that declares the number to be of that
+format, such as "0x" for hexadecimal numbers. Set to an empty string
+to mandate that a specifier is not needed for that number format.
+.br
+- \fIdigits\fR is the vector of allowed digits in the main
+body of the number. The vector must be initialized with digits in ascending
+numerical order: the first digit specified
+will always be interpreted as zero (additive identity), the next will be
+interpreted as the number one
+(multiplicative identity), etc.
+.br
+- \fIexponent_string\fR is a string that declares the
+exponent part of the number, such as "e" in "1e4".
+.br
+- \fIexponent_digits\fR is the vector of allowed digits in
+the exponent part of the number. This list may be different
+to \fIdigits\fR. Again, the vector must be initialized with digits in
+ascending numerical order.
+.RE
+
+The constructor will throw \fBArithmos::invalid_format\fR if the
+declared format is invalid.
+
+.B Typedefs
+.RS 4
+\fBdigit_type\fR   [\fBDigit\fR]
+.br
+\fBdigits_type\fR  [std::vector<\fBDigit\fR>]
+.br
+\fBstring\fR       [std::string]
+.br
+\fBwidth_type\fR   [\fBArithmos::width_type\fR]
+.RE
+
+.B Methods
+.RS 4
+const string& \fBspecifier\fR() const
+.RS 4
+Return the format's \fIspecifier\fR string.
+.RE
+
+const digits_type& \fBdigits\fR() const
+.RS 4
+Return the format's \fIdigits\fR vector.
+.RE
+
+const string& \fBexponent_specifier\fR() const
+.RS 4
+Return the format's \fIexponent_specifier\fR string.
+.RE
+
+const digits_type& \fBexponent_digits\fR() const
+.RS 4
+Return the format's \fIexponent_digits\fR vector.
+.RE
+
+Data \fBcompare\fR(const string& str) const
+.RS 4
+Parse the string \fIstr\fB as a number with respect to the defined
+number format.
+This information is returned in a \fBData\fR object.
+.RE
+
+string \fBto\fR(const Format& format, const string& str) const
+.RS 4
+Convert \fIstr\fR from the defined number format to the format
+\fIformat\fR.
+.RE
+
+string \fBto\fR(const Format& format, const Data& data) const
+.RS 4
+Convert a number represented by the \fBData\fR object \fIdata\fR
+from the defined number format to the format \fIformat\fR.
+.RE
+.RE
+.RE
+
+
+\fBBasic_Data\fR<char_type>
+.PP
+.RS 4
+The \fBData\fR struct is returned by the \fBcompare\fR method of
+\fBFormat\fR and records whether the string passed to
+\fBcompare\fR conforms to that number format. The struct also records
+other useful information on the properties of the number the string
+represents. The struct's data members are:
+.RS 4
+\fBis_number\fR (bool)
+.RS 4
+is the string a valid number.
+.RE
+
+\fBis_integer\fR (bool)
+.RS 4
+is the string numerically equal to an integer.
+.RE
+
+\fBis_integer_literal\fR (bool)
+.RS 4
+is the string a literal integer (so,
+\(oq1.0\(cq is an integer but not a literal integer, whereas as
+\(oq1\(cq is both).
+.RE
+
+\fBhas_decimal\fR (bool)
+.RS 4
+is there a decimal point in the normalized string.
+.RE
+
+\fBhas_decimal_literal\fR (bool)
+.RS 4
+is there a decimal point in the string.
+.RE
+
+\fBis_fraction_by_exponent\fR (bool)
+.RS 4
+is the number a fraction (not an integer) because of the exponent
+width; that is, because the whole width plus the exponent width is
+less than zero.
+.RE
+
+\fBis_zero\fR (bool)
+.RS 4
+is the number zero.
+.RE
+
+\fBis_positive\fR (bool)
+.RS 4
+is the number positive.
+.RE
+
+\fBis_explicit_positive\fR (bool)
+.RS 4
+is the number explicitly positive (containing a \(oq+\(cq sign).
+.RE
+
+\fBis_exponent_positive\fR (bool)
+.RS 4
+is the exponent positive (yes in \(oq1e2\(cq, no in \(oq1e\-2\(cq).
+.RE
+
+\fBis_exponent_explicit_positive\fR (bool)
+.RS 4
+is the exponent explicitly positive (containing a \(oq+\(cq sign); so,
+yes for \(oq1e+2\(cq and no for \(oq1e2\(cq.
+.RE
+
+\fBwhole_width\fR (string::difference_type)
+.RS 4
+if \fBwhole_string_normalized\fR is an integer, then the power of ten
+that can divide it and still leave the quotient an integer
+(so \(oq12500\(cq has a
+whole_width of \(oq2\(cq, \(oq1500080\(cq has a whole_width of
+\(oq1\(cq, and \(oq140002\(cq has a whole_width of \(oq0\(cq);
+otherwise (\fBwhole_string_normalized\fR being a decimal), the
+number of significant digits in the fractional part multiplied by
+\-1 (so \(oq10.001\(cq has a whole_width of \(oq\-3\(cq,
+\(oq4.010200\(cq has a whole_width of \(oq\-4\(cq, and
+\(oq5.1000\(cq has a whole_width of \(oq\-1\(cq).
+.RE
+
+\fBexponent_width\fR (string::difference_type)
+.RS 4
+the numerical value of the string \fBexponent_string_normalized\fR;
+that is, the number the string represents.
+.RE
+
+\fBwhole_string\fR (string)
+.RS 4
+the [pre\-digits][specifier][digits] part of the number format (the
+portion of the number before the exponent). So, an input of
+\(oq+0.2e\-4\(cq has a \fBwhole_string\fR of \(oq+0.2\(cq; and an input
+of \(oq\-000.100e+0010\(cq has a \fBwhole_string\fR of
+\(oq\-000.100\(cq.
+.RE
+
+\fBwhole_string_normalized\fR (string)
+.RS 4
+the \fBwhole_string\fR with superfluous digits removed and a zero
+placed infront of a decimal point if no digits are before it.
+So, \(oq+.230\(cq is normalized to \(oq0.23\(cq, \(oq0010.00\(cq is
+normalized to \(oq10\(cq, and \(oq\-00.00\(cq is normalized to
+\(oq0\(cq.
+.RE
+
+\fBexponent_position\fR (string::size_type)
+.RS 4
+the index position in the input string of the start of the exponent
+string.
+.RE
+
+\fBexponent_string\fR (string)
+.RS 4
+the [exponent pre\-digits][exponent digits] part of the number format
+(the portion of the number after the exponent).
+So, an input of \(oq\-.2e+04\(cq has an \fBexponent_string\fR of
+\(oq+04\(cq, and \(oq.01e\-01\(cq has an \fBexponent_string\fR of
+\(oq\-01\(cq.
+.RE
+
+\fBexponent_string_normalized\fR (string)
+.RS 4
+the \fBexponent_string\fR with superfluous digits removed.
+So, \(oq+014200\(cq is normalized to \(oq14200\(cq, and \(oq\-00\(cq is
+normalized to \(oq0\(cq.
+.RE
+
+\fBnormalized\fR (string)
+.RS 4
+if \fBexponent_string_normalized\fR is not empty, the string
+     \fBwhole_string_normalized\fR
+       + \fBexponent\fR
+         + \fBexponent_string_normalized\fR
+.br
+otherwise just
+     \fBwhole_string_normalized\fR.
+.RE
+.RE
+
+To clarify some of the integer/fraction definitions and define what
+combinations are required to specify what type of number, the following
+table will prove useful:
+
+  A: 1
+  B: 1.0
+  C: 1.1
+  D: 1e\-1, 100e\-4   \- whole part is an integer literal
+  E: 10.0e\-3        \- whole part is an integer, but not literal
+  F: 10.1e\-3        \- whole part is not an integer
+
+                                 A  B  C  D  E  F
+                               \-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+  [1] is_integer                 1  1  \-  \-  \-  \-
+  [2] is_integer_literal         1  \-  \-  \-  \-  \-
+  [3] has_decimal                \-  \-  1  \-  \-  1
+  [4] has_decimal_literal        \-  1  1  \-  1  1
+  [5] is_fraction_by_exponent    \-  \-  \-  1  1  1
+
+  2                              1  \-  \-  \-  \-  \-
+  1 & 4                          \-  1  \-  \-  \-  \-
+  !(1 | 5)                       \-  \-  1  \-  \-  \-
+  !(1 | 4)                       \-  \-  \-  1  \-  \-
+  !3 & 4 & 5                     \-  \-  \-  \-  1  \-
+  3 & 5                          \-  \-  \-  \-  \-  1
+.RE
+
+
+\fBBasic_Congruence\fR<char_type> ( ... )
+.br
+\fBCongruence( \fRconst std::unordered_set<char_type>& cset,
+            const char_type default )
+.PP
+.RS 4
+Create a congruence whereby the \fIchar_type\fR objects in the set
+\fIcset\fR are to be considered equivalent, of which the \fIdefault\fR
+object, which must appear in \fIcset\fR, is the archetype.
+The constructor will throw type \fBArithmos::congruence_not_in_set\fR
+if \fIdefault\fR is not in \fIcset\fR.
+
+.B Types
+.RS 4
+\fBset\fR  [std::unordered_set<char_type>]
+.RE
+
+.B Methods
+.RS 4
+char_type \fBget_default\fR() const
+.RS 4
+Return the congruence's archetypal object, \fIdefault\fR.
+.RE
+
+char_type \fBnormalize\fR(const char_type digit) const
+.RS 4
+Convert \fIdigit\fR to the archetypal character of the congruence if
+\fIdigit\fR is in the congruence, or else return the character itself.
+.RE
+
+bool \fBhas\fR(const char_type digit) const
+.RS 4
+Does the character \fIdigit\fR belong to the congruence.
+.RE
+.RE
+.RE
+
+
+\fBTranslation\fR
+.PP
+.RS 4
+Typedef'd to std::unordered_set<\fBCongruence\fR>.
+.RE
+
+.SS Functions
+std::string \fBtranslate\fR(const std::string& input,
+                      const Translation& translations)
+.PP
+.RS 4
+Take all characters in the \fIinput\fR string and translate all
+characters found in the congruences defined in \fItranslations\fR to
+their archetypes.
+.RE
+
+.SH SEE ALSO
+.BR fpclassify "(3), " 
+.BR isnan "(3), " signbit (3)
