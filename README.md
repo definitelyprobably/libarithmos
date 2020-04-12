@@ -14,7 +14,9 @@ Haphazard. Example code follows. A man page has been written that contains more 
 groff -Tascii -man docs/manpages/libarithmos.3 | less
 ```
 
-## Example
+## Examples
+
+### Parsing strings
 
 ```c++
 #include <iostream>
@@ -101,6 +103,164 @@ input: -.00e-00
   + normalized: 0
 input: -. 
   + not a number
+```
+
+### Converting strings
+
+Library can also do some basic conversion of numbers from one format to another, but does not attempt conversion for non-integers.
+
+```c++
+#include <iostream>
+#include <string>
+#include <iomanip>
+#include <arithmos.h>  // libarithmos header
+
+int main() {
+
+  std::string input;
+
+  while ( std::cout << "input: ", !std::getline(std::cin, input).eof() ) {
+
+    if (std::cin.fail() || std::cin.bad())
+      return 1;
+    if (input.empty())
+      continue;
+    if (input == "q" || input == "quit")
+      return 0;
+
+    // start of code that is pertinent...
+
+	using Arithmos::octal;
+	using Arithmos::hexadecimal;
+
+    std::string output = hexadecimal.to(octal, input);
+
+    if ( output.empty() ) {
+      std::cout << "  + not a number" << std::endl;
+    }
+    else {
+      std::cout << "  + to octal: " << output << std::endl;
+    }
+  }
+
+  return 0;
+}
+```
+
+Output:
+
+```
+input: -0x000
+  + to octal: 00   # Note!
+input: +0x000p000
+  + to octal: 00   # Note!
+input: 0x0ef1e0b
+  + to octal: 073617013
+input: 0xffp12
+  + to octal: 0377e12
+input: 0xffp-12
+  + not a number
+input: 0xff.ff
+  + not a number
+input: 0xff.ffp1234
+  + not a number
+```
+
+### Creating a custom number format
+
+```c++
+#include <iostream>
+#include <string>
+#include <iomanip>
+#include <clocale>
+#include <cstdlib>
+#include <arithmos.h>  // libarithmos header
+
+int main() {
+
+  // output to linux console, set locale and use std::wcstombs.
+  std::setlocale(LC_ALL, "en_US.utf8");
+
+  // use wide characters to represent gurmukhi numerals; use wchar_t
+  // equivalents
+  using Arithmos::WFormat;
+  using Arithmos::WData;
+  using Arithmos::wdecimal;
+
+  WFormat ternary{
+    L"g_",  // marker that identifies the number
+    { L'੦', L'੧', L'੨' }, // digits
+    L"e", // exponent marker
+    { L'੦', L'੧', L'੨', L'੩', L'੪', L'੫', L'੬', L'੭', L'੮', L'੯' } // digits in the exponent
+  };
+
+  std::vector<std::wstring> inputs{
+    L"g_੦੦੧",
+    L"g_੦੦੧੧e੪੭",
+    L"g_੧੦੨.੦੨੦੦",
+    L"g_੨੨e-੦੦",
+    L"g_੨੧e੯੬",
+    L"-g_੧੧੧"
+  };
+
+  for (const auto& i: inputs) {
+    WData d = ternary.compare(i);
+
+    char original[1024];
+    std::wcstombs(original, i.c_str(), 1024);
+
+    char normalized[1024];
+    std::wcstombs(normalized, d.normalized.c_str(), 1024);
+
+    char todecimal[1024];
+    std::wcstombs(todecimal, ternary.to(wdecimal, i).c_str(), 1024);
+
+    std::cout << std::boolalpha
+              << "number: " << original
+              << "\n  + is number: " << d.is_number
+              << "\n  + positive: " << d.is_positive
+              << "\n  + normalized: " << normalized
+              << "\n  + to decimal: " << todecimal
+              << std::endl;
+  }
+
+  return 0;
+}
+```
+
+Output:
+
+```
+number: g_੦੦੧
+  + is number: true
+  + positive: true
+  + normalized: g_੧
+  + to decimal: 1
+number: g_੦੦੧੧e੪੭
+  + is number: true
+  + positive: true
+  + normalized: g_੧੧e੪੭
+  + to decimal: 4e47
+number: g_੧੦੨.੦੨੦੦
+  + is number: true
+  + positive: true
+  + normalized: g_੧੦੨.੦੨
+  + to decimal:   # Note! Integer conversion only
+number: g_੨੨e-੦੦
+  + is number: true
+  + positive: true
+  + normalized: g_੨੨
+  + to decimal: 8
+number: g_੨੧e੯੬
+  + is number: true
+  + positive: true
+  + normalized: g_੨੧e੯੬
+  + to decimal: 7e96
+number: -g_੧੧੧
+  + is number: true
+  + positive: false
+  + normalized: -g_੧੧੧
+  + to decimal: -13
 ```
 
 ## Licence

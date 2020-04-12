@@ -1,5 +1,5 @@
 AC_PREREQ([2.68])
-AC_INIT([libarithmos], [0.0.0], [ksa.kooner@gmail.com])
+AC_INIT([libarithmos], [0.1.0], [ksa.kooner@gmail.com])
 AM_INIT_AUTOMAKE([foreign -Wall dist-bzip2 dist-xz])
 AM_PROG_AR
 LT_PREREQ([2.4.2])
@@ -72,7 +72,7 @@ AS_IF([test "x$enable_docs_compress_programs" != xno],
                  [AC_MSG_RESULT([ok])
                   AS_IF([test -z "$DCOMPRESS"],
                         [DCOMPRESS="$compress"],
-                        [DCOMPRESS="${DCOMPRESS},$compress"])],
+                        [DCOMPRESS="${DCOMPRESS}:$compress"])],
                  [AC_MSG_RESULT([no])])
            AS_IF([test "x$enable_forced_docs_compression" = xyes],
                  [break])

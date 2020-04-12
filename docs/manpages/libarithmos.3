@@ -6,7 +6,10 @@
 .\"
 .TH LIBARITHMOS 3 2020\-04\-11 GNU/Linux "Linux Programmer's Manual"
 .SH NAME
-libarithmos \- the libarithmos library.
+libarithmos \- library providing number parsing for C++ strings.
+For defining your own number formats, the library can be used as
+header-only; otherwise, binary, octal, decimal and hexadecimal number
+formats are defined for use.
 .SH SYNOPSIS
 .RB "#include <" arithmos.h >
 
@@ -100,6 +103,35 @@ const \fBTranslation\fR digit_to_digit{
     ...
 .br
 };
+.PD
+
+
+/**** Other character types ****/
+.PP
+// classes are named as:
+.br
+.RB "using " Arithmos::Format ";  // for char strings
+.br
+.RB "using " Arithmos::WFormat ";  // for wchar_t strings
+.br
+.RB "using " Arithmos::U8Format ";  // for char8_t strings (requires C++20)
+.br
+.RB "using " Arithmos::U16Format ";  // for char16_t strings
+.br
+.RB "using " Arithmos::U32Format ";  // for char32_t strings
+.PP
+// objects are named as such:
+.br
+.RB "using " Arithmos::decimal ";  // for char strings
+.br
+.RB "using " Arithmos::wdecimal ";  // for wchar_t strings
+.br
+.RB "using " Arithmos::u8decimal ";  // for char8_t strings (requires C++20)
+.br
+.RB "using " Arithmos::u16decimal ";  // for char16_t strings
+.br
+.RB "using " Arithmos::u32decimal ";  // for char32_t strings
+.br
 
 
 .SH DESCRIPTION

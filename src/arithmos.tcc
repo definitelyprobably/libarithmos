@@ -642,7 +642,7 @@ template <typename T, typename U>
 auto Basic_Format<T,U>::to (const Basic_Format<T,U>& dest,
                             const string& input) const -> string {
   const Basic_Data<T> d = compare(input);
-  return (d.is_number && d.is_integer) ? to(dest, d) : string{};
+  return (d.is_number && d.is_integer_literal) ? to(dest, d) : string{};
 }
 
 template <typename T, typename U>

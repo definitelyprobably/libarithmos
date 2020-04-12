@@ -86,19 +86,34 @@ AT_KEYWORDS([convert binary-convert convert-octal binary-convert-octal convert-f
 AT_CHECK([usage convert binary octal 0b0.111], [], [], [])
 AT_CLEANUP
 
-AT_SETUP([convert binary decimal 0b0.0])
+AT_SETUP([convert binary decimal 0b00])
 AT_KEYWORDS([convert binary-convert convert-decimal binary-convert-decimal])
-AT_CHECK([usage convert binary decimal 0b0.0], [], [0], [])
+AT_CHECK([usage convert binary decimal 0b00], [], [0], [])
+AT_CLEANUP
+
+AT_SETUP([convert binary decimal 0b0.0])
+AT_KEYWORDS([convert binary-convert convert-decimal binary-convert-decimal convert-fails fails])
+AT_CHECK([usage convert binary decimal 0b0.0], [], [], [])
+AT_CLEANUP
+
+AT_SETUP([convert binary hexadecimal 0b1101])
+AT_KEYWORDS([convert binary-convert convert-hexadecimal binary-convert-hexadecimal])
+AT_CHECK([usage convert binary hexadecimal 0b1101], [], [0xd], [])
 AT_CLEANUP
 
 AT_SETUP([convert binary hexadecimal 0b1101.0])
-AT_KEYWORDS([convert binary-convert convert-hexadecimal binary-convert-hexadecimal])
-AT_CHECK([usage convert binary hexadecimal 0b1101.0], [], [0xd], [])
+AT_KEYWORDS([convert binary-convert convert-hexadecimal binary-convert-hexadecimal convert-fails fails])
+AT_CHECK([usage convert binary hexadecimal 0b1101.0], [], [], [])
+AT_CLEANUP
+
+AT_SETUP([convert binary custom1 0b11])
+AT_KEYWORDS([convert binary-convert convert-custom1 binary-convert-custom1])
+AT_CHECK([usage convert binary custom1 0b11], [], [STARTl], [])
 AT_CLEANUP
 
 AT_SETUP([convert binary custom1 0b11.000])
-AT_KEYWORDS([convert binary-convert convert-custom1 binary-convert-custom1])
-AT_CHECK([usage convert binary custom1 0b11.000], [], [STARTl], [])
+AT_KEYWORDS([convert binary-convert convert-custom1 binary-convert-custom1 convert-fails fails])
+AT_CHECK([usage convert binary custom1 0b11.000], [], [], [])
 AT_CLEANUP
 
 AT_SETUP([convert octal binary 0705])
@@ -186,19 +201,34 @@ AT_KEYWORDS([convert octal-convert convert-octal octal-convert-octal convert-fai
 AT_CHECK([usage convert octal octal 00.111], [], [], [])
 AT_CLEANUP
 
-AT_SETUP([convert octal hexadecimal 00.0])
+AT_SETUP([convert octal hexadecimal 000])
 AT_KEYWORDS([convert octal-convert convert-hexadecimal octal-convert-hexadecimal])
-AT_CHECK([usage convert octal hexadecimal 00.0], [], [0x0], [])
+AT_CHECK([usage convert octal hexadecimal 000], [], [0x0], [])
+AT_CLEANUP
+
+AT_SETUP([convert octal hexadecimal 00.0])
+AT_KEYWORDS([convert octal-convert convert-hexadecimal octal-convert-hexadecimal convert-fails fails])
+AT_CHECK([usage convert octal hexadecimal 00.0], [], [], [])
+AT_CLEANUP
+
+AT_SETUP([convert octal decimal 017])
+AT_KEYWORDS([convert octal-convert convert-decimal octal-convert-decimal])
+AT_CHECK([usage convert octal decimal 017], [], [15], [])
 AT_CLEANUP
 
 AT_SETUP([convert octal decimal 017.0])
-AT_KEYWORDS([convert octal-convert convert-decimal octal-convert-decimal])
-AT_CHECK([usage convert octal decimal 017.0], [], [15], [])
+AT_KEYWORDS([convert octal-convert convert-decimal octal-convert-decimal convert-fails fails])
+AT_CHECK([usage convert octal decimal 017.0], [], [], [])
+AT_CLEANUP
+
+AT_SETUP([convert octal custom1 0150])
+AT_KEYWORDS([convert octal-convert convert-custom1 octal-convert-custom1])
+AT_CHECK([usage convert octal custom1 0150], [], [STARTrnr], [])
 AT_CLEANUP
 
 AT_SETUP([convert octal custom1 0150.000])
-AT_KEYWORDS([convert octal-convert convert-custom1 octal-convert-custom1])
-AT_CHECK([usage convert octal custom1 0150.000], [], [STARTrnr], [])
+AT_KEYWORDS([convert octal-convert convert-custom1 octal-convert-custom1 convert-fails fails])
+AT_CHECK([usage convert octal custom1 0150.000], [], [], [])
 AT_CLEANUP
 
 AT_SETUP([convert decimal binary 138])
@@ -286,19 +316,34 @@ AT_KEYWORDS([convert decimal-convert convert-decimal decimal-convert-decimal con
 AT_CHECK([usage convert decimal decimal 0.972], [], [], [])
 AT_CLEANUP
 
-AT_SETUP([convert decimal octal 0.000])
+AT_SETUP([convert decimal octal 0])
 AT_KEYWORDS([convert decimal-convert convert-octal decimal-convert-octal])
-AT_CHECK([usage convert decimal octal 0.000], [], [00], [])
+AT_CHECK([usage convert decimal octal 0], [], [00], [])
+AT_CLEANUP
+
+AT_SETUP([convert decimal octal 0.000])
+AT_KEYWORDS([convert decimal-convert convert-octal decimal-convert-octal convert-fails fails])
+AT_CHECK([usage convert decimal octal 0.000], [], [], [])
+AT_CLEANUP
+
+AT_SETUP([convert decimal hexadecimal 172])
+AT_KEYWORDS([convert decimal-convert convert-hexadecimal decimal-convert-hexadecimal])
+AT_CHECK([usage convert decimal hexadecimal 172], [], [0xac], [])
 AT_CLEANUP
 
 AT_SETUP([convert decimal hexadecimal 172.0])
-AT_KEYWORDS([convert decimal-convert convert-hexadecimal decimal-convert-hexadecimal])
-AT_CHECK([usage convert decimal hexadecimal 172.0], [], [0xac], [])
+AT_KEYWORDS([convert decimal-convert convert-hexadecimal decimal-convert-hexadecimal convert-fails fails])
+AT_CHECK([usage convert decimal hexadecimal 172.0], [], [], [])
+AT_CLEANUP
+
+AT_SETUP([convert decimal custom1 85])
+AT_KEYWORDS([convert decimal-convert convert-custom1 decimal-convert-custom1])
+AT_CHECK([usage convert decimal custom1 85], [], [STARTrrv], [])
 AT_CLEANUP
 
 AT_SETUP([convert decimal custom1 85.000])
-AT_KEYWORDS([convert decimal-convert convert-custom1 decimal-convert-custom1])
-AT_CHECK([usage convert decimal custom1 85.000], [], [STARTrrv], [])
+AT_KEYWORDS([convert decimal-convert convert-custom1 decimal-convert-custom1 convert-fails fails])
+AT_CHECK([usage convert decimal custom1 85.000], [], [], [])
 AT_CLEANUP
 
 AT_SETUP([convert hexadecimal binary 0xaf])
@@ -386,19 +431,34 @@ AT_KEYWORDS([convert hexadecimal-convert convert-hexadecimal hexadecimal-convert
 AT_CHECK([usage convert hexadecimal hexadecimal 0x0.d], [], [], [])
 AT_CLEANUP
 
-AT_SETUP([convert hexadecimal custom1 0x00.00])
+AT_SETUP([convert hexadecimal custom1 0x00])
 AT_KEYWORDS([convert hexadecimal-convert convert-custom1 hexadecimal-convert-custom1])
-AT_CHECK([usage convert hexadecimal custom1 0x00.00], [], [STARTa], [])
+AT_CHECK([usage convert hexadecimal custom1 0x00], [], [STARTa], [])
+AT_CLEANUP
+
+AT_SETUP([convert hexadecimal custom1 0x00.00])
+AT_KEYWORDS([convert hexadecimal-convert convert-custom1 hexadecimal-convert-custom1 convert-fails fails])
+AT_CHECK([usage convert hexadecimal custom1 0x00.00], [], [], [])
+AT_CLEANUP
+
+AT_SETUP([convert hexadecimal octal 0x0e])
+AT_KEYWORDS([convert hexadecimal-convert convert-octal hexadecimal-convert-octal])
+AT_CHECK([usage convert hexadecimal octal 0x0e], [], [016], [])
 AT_CLEANUP
 
 AT_SETUP([convert hexadecimal octal 0x0e.0])
-AT_KEYWORDS([convert hexadecimal-convert convert-octal hexadecimal-convert-octal])
-AT_CHECK([usage convert hexadecimal octal 0x0e.0], [], [016], [])
+AT_KEYWORDS([convert hexadecimal-convert convert-octal hexadecimal-convert-octal convert-fails fails])
+AT_CHECK([usage convert hexadecimal octal 0x0e.0], [], [], [])
+AT_CLEANUP
+
+AT_SETUP([convert hexadecimal decimal 0xb])
+AT_KEYWORDS([convert hexadecimal-convert convert-decimal hexadecimal-convert-decimal])
+AT_CHECK([usage convert hexadecimal decimal 0xb], [], [11], [])
 AT_CLEANUP
 
 AT_SETUP([convert hexadecimal decimal 0xb.000])
-AT_KEYWORDS([convert hexadecimal-convert convert-decimal hexadecimal-convert-decimal])
-AT_CHECK([usage convert hexadecimal decimal 0xb.000], [], [11], [])
+AT_KEYWORDS([convert hexadecimal-convert convert-decimal hexadecimal-convert-decimal convert-fails fails])
+AT_CHECK([usage convert hexadecimal decimal 0xb.000], [], [], [])
 AT_CLEANUP
 
 AT_SETUP([convert custom1 binary STARTgan])
@@ -486,19 +546,34 @@ AT_KEYWORDS([convert custom1-convert convert-octal custom1-convert-octal convert
 AT_CHECK([usage convert custom1 octal STARTa.ala], [], [], [])
 AT_CLEANUP
 
-AT_SETUP([convert custom1 binary STARTaa.aaa])
+AT_SETUP([convert custom1 binary STARTaa])
 AT_KEYWORDS([convert custom1-convert convert-binary custom1-convert-binary])
-AT_CHECK([usage convert custom1 binary STARTaa.aaa], [], [0b0], [])
+AT_CHECK([usage convert custom1 binary STARTaa], [], [0b0], [])
+AT_CLEANUP
+
+AT_SETUP([convert custom1 binary STARTaa.aaa])
+AT_KEYWORDS([convert custom1-convert convert-binary custom1-convert-binary convert-fails fails])
+AT_CHECK([usage convert custom1 binary STARTaa.aaa], [], [], [])
+AT_CLEANUP
+
+AT_SETUP([convert custom1 hexadecimal STARTnrv])
+AT_KEYWORDS([convert custom1-convert convert-hexadecimal custom1-convert-hexadecimal])
+AT_CHECK([usage convert custom1 hexadecimal STARTnrv], [], [0xc1], [])
 AT_CLEANUP
 
 AT_SETUP([convert custom1 hexadecimal STARTnrv.a])
-AT_KEYWORDS([convert custom1-convert convert-hexadecimal custom1-convert-hexadecimal])
-AT_CHECK([usage convert custom1 hexadecimal STARTnrv.a], [], [0xc1], [])
+AT_KEYWORDS([convert custom1-convert convert-hexadecimal custom1-convert-hexadecimal convert-fails fails])
+AT_CHECK([usage convert custom1 hexadecimal STARTnrv.a], [], [], [])
+AT_CLEANUP
+
+AT_SETUP([convert custom1 decimal STARTal])
+AT_KEYWORDS([convert custom1-convert convert-decimal custom1-convert-decimal])
+AT_CHECK([usage convert custom1 decimal STARTal], [], [3], [])
 AT_CLEANUP
 
 AT_SETUP([convert custom1 decimal STARTal.aaa])
-AT_KEYWORDS([convert custom1-convert convert-decimal custom1-convert-decimal])
-AT_CHECK([usage convert custom1 decimal STARTal.aaa], [], [3], [])
+AT_KEYWORDS([convert custom1-convert convert-decimal custom1-convert-decimal convert-fails fails])
+AT_CHECK([usage convert custom1 decimal STARTal.aaa], [], [], [])
 AT_CLEANUP
 
 AT_SETUP([convert binary binary 0b0000000])
