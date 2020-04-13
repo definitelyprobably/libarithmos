@@ -4,7 +4,7 @@ This library can compare strings to a defined number format (think C strtol or C
 
 ## Building
 
-Clone the repo and configure, build and install as usual. See the INSTALL.md file for more details. A C++11 compiler is required, but there are no other external dependencies.
+Clone the repo and configure, build and install as usual. See the INSTALL.md file for more details. A C++11 compiler is required and autotools will need to be installed if building from a clone of the repo, but there are no other external dependencies. If you want to just install the library, you can take a libarithmos tarball from the [releases page] and then autotools is not required, only a C++11 compiler is needed.
 
 ## Documentation
 
@@ -280,3 +280,4 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+  [releases page]: https://github.com/definitelyprobably/libarithmos/releases
