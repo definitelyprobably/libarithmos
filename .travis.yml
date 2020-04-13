@@ -6,10 +6,5 @@ sudo: required
 compiler:
   - gcc
   - clang
-addons:
-  apt:
-    packages:
-      - clang-7
-      - llvm-7-dev
 script:
-  - ./configure && make && make check && sudo make install
+  - ./configure --disbale-lto && make && make check && sudo make install
