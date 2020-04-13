@@ -40,21 +40,21 @@ int main() {
     // start of code that is pertinent...
 
     // This code assumes that 'input' should be a decimal number.
-	// If expecting binary, octal or hexadecimal then call Arithmos::binary,
-	// Arithmos::octal or Arithmos::hexadecimal respectively instead.
-    // The object returned is an Arithmos::Data object.
+    // If expecting binary, octal or hexadecimal then call Arithmos::binary,
+    // Arithmos::octal or Arithmos::hexadecimal respectively instead.
+    // The object returned is an Arithmos::Data object, which contains the
+    // results of the string parsing.
 
     Arithmos::Data d = Arithmos::decimal.compare(input);
 
-    // Arithmos::Data object contains the results of parsing 'input':
     if (!d.is_number) {
       std::cout << "  + not a number" << std::endl;
     }
     else {
       std::cout << std::boolalpha
-                << "  + is positive: " << d.is_positive
+                << "  + is positive: "  << d.is_positive
                 << "\n  + is integer: " << d.is_integer
-                << "\n  + is zero: " << d.is_zero
+                << "\n  + is zero: "    << d.is_zero
                 << "\n  + normalized: " << d.normalized
                 << std::endl;
     }
@@ -130,8 +130,8 @@ int main() {
 
     // start of code that is pertinent...
 
-	using Arithmos::octal;
-	using Arithmos::hexadecimal;
+    using Arithmos::octal;
+    using Arithmos::hexadecimal;
 
     std::string output = hexadecimal.to(octal, input);
 
@@ -151,19 +151,19 @@ Output:
 
 ```
 input: -0x000
-  + to octal: 00   # Note!
+  + to octal: 00    # Note! Library does not attempt to contract to just '0'
 input: +0x000p000
-  + to octal: 00   # Note!
+  + to octal: 00    # Note! Library does not attempt to contract to just '0'
 input: 0x0ef1e0b
   + to octal: 073617013
 input: 0xffp12
   + to octal: 0377e12
 input: 0xffp-12
-  + not a number
+  + not a number    # Note! Only integers are converted
 input: 0xff.ff
-  + not a number
+  + not a number    # Note! Only integers are converted
 input: 0xff.ffp1234
-  + not a number
+  + not a number    # Note! Only integers are converted
 ```
 
 ### Creating a custom number format
@@ -181,14 +181,14 @@ int main() {
   // output to linux console, set locale and use std::wcstombs.
   std::setlocale(LC_ALL, "en_US.utf8");
 
-  // use wide characters to represent gurmukhi numerals; use wchar_t
-  // equivalents
+  // use wide characters to represent Gurmukhi numerals; library has
+  // corresponding wchar_t classes and objects (see man page):
   using Arithmos::WFormat;
   using Arithmos::WData;
   using Arithmos::wdecimal;
 
   WFormat ternary{
-    L"g_",  // marker that identifies the number
+    L"g_",  // marker that identifies the number (like "0x" for hexadecimal numbers)
     { L'੦', L'੧', L'੨' }, // digits
     L"e", // exponent marker
     { L'੦', L'੧', L'੨', L'੩', L'੪', L'੫', L'੬', L'੭', L'੮', L'੯' } // digits in the exponent
@@ -217,8 +217,8 @@ int main() {
 
     std::cout << std::boolalpha
               << "number: " << original
-              << "\n  + is number: " << d.is_number
-              << "\n  + positive: " << d.is_positive
+              << "\n  + is number: "  << d.is_number
+              << "\n  + positive: "   << d.is_positive
               << "\n  + normalized: " << normalized
               << "\n  + to decimal: " << todecimal
               << std::endl;
@@ -245,7 +245,7 @@ number: g_੧੦੨.੦੨੦੦
   + is number: true
   + positive: true
   + normalized: g_੧੦੨.੦੨
-  + to decimal:   # Note! Integer conversion only
+  + to decimal:     # Note! Non-integers are not converted
 number: g_੨੨e-੦੦
   + is number: true
   + positive: true
