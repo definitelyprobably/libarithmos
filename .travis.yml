@@ -1,5 +1,10 @@
 language: cpp
 
+sudo: required
+
 compiler:
     - gcc
     - clang
+
+script:
+    - ./configure && make && make check && make install

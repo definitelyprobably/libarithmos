@@ -1,5 +1,5 @@
 AC_PREREQ([2.68])
-AC_INIT([libarithmos], [0.1.0], [ksa.kooner@gmail.com])
+AC_INIT([libarithmos], [1.0.0], [ksa.kooner@gmail.com])
 AM_INIT_AUTOMAKE([foreign -Wall dist-bzip2 dist-xz])
 AM_PROG_AR
 LT_PREREQ([2.4.2])

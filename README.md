@@ -1,5 +1,7 @@
 # libarithmos
 
+[![Build Status](https://travis-ci.com/definitelyprobably/libarithmos.svg?branch=master)](https://travis-ci.com/definitelyprobably/libarithmos)
+
 This library can compare strings to a defined number format (think C strtol or C++ stringstream). It can also convert numbers from one format to another, and extract information about the number. It's not fast, but it does the job. The typical usage would be parsing command-line inputs to your program to catch malformed strings.
 
 ## Building

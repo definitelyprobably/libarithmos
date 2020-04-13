@@ -154,7 +154,7 @@ class invalid_format : public std::exception {
   std::string message_;
 public:
   invalid_format();
-  const char* what() noexcept;
+  const char* what() const noexcept;
 };
 
 
@@ -212,9 +212,6 @@ struct Basic_Data {
   bool operator==(const Basic_Data&) const;
   // overload != operator
   bool operator!=(const Basic_Data&) const;
-
-  // a print method, useful for debugging
-  void print(std::basic_ostream<char_type>&) const;
 
   // data members:
   bool  is_number;
@@ -403,9 +400,6 @@ protected:
   struct Split {
     // ctors
     Split();
-
-    // a print method, useful for debugging
-    void print(std::basic_ostream<char_type>&) const;
 
     // data members
     bool   whole_positive;

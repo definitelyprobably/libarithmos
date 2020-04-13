@@ -205,33 +205,6 @@ bool Basic_Data<T>::operator!=(const Basic_Data<T>& d) const {
   return !(*this == d);
 }
 
-// print debug method
-template <typename T>
-void Basic_Data<T>::print(std::basic_ostream<char_type>& out) const {
-  out << "is number: " << is_number
-      << "\nwhole string: " << whole_string
-      << "\nwhole string (normalized): " << whole_string_normalized
-      << "\nexponent string: " << exponent_string
-      << "\nexponent string (normalized): " << exponent_string_normalized
-      << "\nnormalized: " << normalized
-      << "\nis positive: " << is_positive
-      << "\nis positive (explicit): " << is_explicit_positive
-      << "\nis exponent positive: " << is_exponent_positive
-      << "\nis exponent positive (explicit): "
-      << is_exponent_explicit_positive
-      << "\nis zero: " << is_zero
-      << "\nis integer: " << is_integer
-      << "\nis integer literal: " << is_integer_literal
-      << "\nhas decimal: " << has_decimal
-      << "\nhas decimal literal: " << has_decimal_literal
-      << "\nis fraction by exponent: " << is_fraction_by_exponent
-      << "\nwhole width: " << whole_width
-      << "\nexponent width: " << exponent_width
-      << "\nmantissa: " << mantissa
-      << "\nexponent position: " << exponent_position
-      << std::endl;
-}
-
 
 
 
@@ -248,20 +221,6 @@ Basic_Format<T,U>::Split::Split()
     exponent_positive {true},
     exponent_part     {}
 {}
-
-// print debug method
-template <typename T, typename U>
-void Basic_Format<T,U>::Split::print(std::basic_ostream<char_type>& out) const
-{
-  out << "whole positive: " << whole_positive
-      << "\nwhole part: " << whole_part
-      << "\ndecimal: " << decimal
-      << "\ndecimal_part: " << decimal_part
-      << "\nexponent: " << exponent
-      << "\nexponent positive: " << exponent_positive
-      << "\nexponent part: " << exponent_part
-      << std::endl;
-}
 
 
 // -- struct Basic_Format::Count -------------

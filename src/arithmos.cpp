@@ -81,7 +81,9 @@ const U32Translation u32hex_upper_to_lower{
 
 // invalid_format class
 invalid_format::invalid_format() : message_{"invalid format number"} {}
-const char* invalid_format::what() noexcept { return message_.c_str(); }
+const char* invalid_format::what() const noexcept {
+  return message_.c_str();
+}
 
 
 // useful lists for defining number Formats
