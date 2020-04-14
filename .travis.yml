@@ -7,4 +7,4 @@ compiler:
   - gcc
   - clang
 script:
-  - ./configure --disbale-lto && make && make check && sudo make install
+  - ./configure --disable-lto && make && make check && sudo make install
